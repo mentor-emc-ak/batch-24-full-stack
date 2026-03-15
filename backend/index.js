@@ -41,7 +41,7 @@ app.use(express.json()) // Middleware to parse JSON bodies
 
 app.use(cors(
   {
-    origin: 'http://localhost:5173'
+    origin: 'https://batch-24-full-stack-1pte.vercel.app'
   }
 ))
 
