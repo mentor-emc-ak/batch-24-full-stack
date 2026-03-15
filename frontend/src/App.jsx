@@ -1,5 +1,9 @@
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
+
+const axiosInstance = axios.create({
+  baseURL: 'https://batch-24-full-stack.vercel.app'
+})
 
 function App() {
   const [todos, setTodos] = useState([])
@@ -10,7 +14,7 @@ function App() {
   const axiosFetchTodos = async () => {
     try {
       setLoading(true)
-      const response = await axios.get('https://batch-24-full-stack.vercel.app/')
+      const response = await axiosInstance.get('/')
       // const response = await axios.get('https://jsonplaceholder.typicode.com/todos')
       setTodos(response.data)
     } catch (error) {
@@ -24,7 +28,7 @@ function App() {
     const userId = document.getElementById('userId').value
     const title = document.getElementById('title').value
 
-    axios.post('https://batch-24-full-stack.vercel.app/', { userId, title })
+    axiosInstance.post('/', { userId, title })
       .then(response => {
         console.log('Todo created:', response.data)
         axiosFetchTodos() // Refresh the todo list after creating a new todo
@@ -39,7 +43,7 @@ function App() {
     try {
       const fetchData = async () => {
         setLoading(true)
-        const response = await axios.get(`https://batch-24-full-stack.vercel.app/${selectedTodoId}`)
+        const response = await axiosInstance.get(`/${selectedTodoId}`)
         setSelectedTodo(response.data)
         setLoading(false)
       }
@@ -65,7 +69,7 @@ function App() {
 
   const updateTodo = () => {
     if (!selectedTodo) return
-    axios.put(`https://batch-24-full-stack.vercel.app/${selectedTodo._id}`, selectedTodo)
+    axiosInstance.put(`/${selectedTodo._id}`, selectedTodo)
       .then(response => {
         console.log('Todo updated:', response.data)
         axiosFetchTodos() // Refresh the todo list after updating the todo
@@ -97,7 +101,7 @@ function App() {
       <ol>
         {todos.map(todo => (
           <li key={todo._id}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}><p>{todo.title}</p> - <p>{todo.completed ? 'Completed' : 'Not Completed'}</p> - <button onClick={() => setSelectedTodoId(todo._id)}>Edit</button> <button onClick={() => axios.delete(`https://batch-24-full-stack.vercel.app/${todo._id}`).then(() => axiosFetchTodos())}>Delete</button></div>
+            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}><p>{todo.title}</p> - <p>{todo.completed ? 'Completed' : 'Not Completed'}</p> - <button onClick={() => setSelectedTodoId(todo._id)}>Edit</button> <button onClick={() => axiosInstance.delete(`/${todo._id}`).then(() => axiosFetchTodos())}>Delete</button></div>
           </li>
         ))}
       </ol>

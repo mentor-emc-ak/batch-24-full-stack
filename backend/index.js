@@ -1,9 +1,14 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+
+dotenv.config()
+
+
 const app = express()
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 // todo schema
 const todoSchema = new mongoose.Schema({
@@ -16,7 +21,7 @@ const todoSchema = new mongoose.Schema({
 const Todo = mongoose.model('Todo', todoSchema)
 
 // Mongoose connection
-const uri = "mongodb+srv://batch-24:batch-24-password@cluster0.cdx27hb.mongodb.net/emc?appName=Cluster0";
+const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.cdx27hb.mongodb.net/emc?appName=Cluster0`;
 mongoose.connect(uri)
   .then(() => console.log('Connected to MongoDB via Mongoose!'))
   .catch((err) => {
@@ -41,7 +46,7 @@ app.use(express.json()) // Middleware to parse JSON bodies
 
 app.use(cors(
   {
-    origin: 'https://batch-24-full-stack-app.vercel.app'
+    origin: process.env.CORS_ORIGIN
   }
 ))
 
